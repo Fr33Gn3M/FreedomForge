@@ -6,7 +6,7 @@ import { ref } from 'vue';
 
 import { Page, useVbenModal } from '@vben/common-ui';
 
-import { NButton, NSpace, NTag, NTree } from 'naive-ui';
+import { NButton, NInput, NSpace, NTag, NTree } from 'naive-ui';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
@@ -169,8 +169,8 @@ function buildTree(menus: MenuItem[], parentId = 0): any[] {
       <template #action="{ row }">
         <NSpace>
           <NButton size="tiny" type="primary" quaternary @click="openPerm(row)">
-权限
-</NButton>
+            权限
+          </NButton>
           <NButton size="tiny" quaternary @click="openEdit(row)">编辑</NButton>
           <NButton
             size="tiny"
@@ -187,47 +187,18 @@ function buildTree(menus: MenuItem[], parentId = 0): any[] {
 
     <!-- Add/Edit Modal -->
     <FormModal>
-      <div
-        style="display: flex; flex-direction: column; gap: 16px; padding: 8px 0"
-      >
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 8px 0">
         <div>
-          <label>角色名称</label>
-          <input
-            v-model="editForm.name"
-            style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #d9d9d9;
-              border-radius: 4px;
-            "
-            placeholder="如：财务主管"
-          />
+          <label style="display: block; margin-bottom: 4px">角色名称</label>
+          <NInput v-model:value="editForm.name" placeholder="如：财务主管" />
         </div>
         <div>
-          <label>角色编码</label>
-          <input
-            v-model="editForm.code"
-            :disabled="isEdit"
-            style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #d9d9d9;
-              border-radius: 4px;
-            "
-            placeholder="如：finance_admin"
-          />
+          <label style="display: block; margin-bottom: 4px">角色编码</label>
+          <NInput v-model:value="editForm.code" :disabled="isEdit" placeholder="如：finance_admin" />
         </div>
         <div>
-          <label>描述</label>
-          <input
-            v-model="editForm.description"
-            style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #d9d9d9;
-              border-radius: 4px;
-            "
-          />
+          <label style="display: block; margin-bottom: 4px">描述</label>
+          <NInput v-model:value="editForm.description" placeholder="描述" />
         </div>
       </div>
     </FormModal>

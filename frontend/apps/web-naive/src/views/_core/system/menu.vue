@@ -4,7 +4,7 @@ import { ref } from 'vue';
 
 import { Page, useVbenModal } from '@vben/common-ui';
 
-import { NButton, NSpace, NTag } from 'naive-ui';
+import { NButton, NInput, NSelect, NSpace, NTag } from 'naive-ui';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
@@ -213,140 +213,42 @@ async function handleDelete(row: Record<string, any>) {
 
     <!-- Form Modal -->
     <FormModal>
-      <div
-        style="
-          display: flex;
-          flex-direction: column;
-          gap: 14px;
-          max-height: 60vh;
-          padding: 8px 0;
-          overflow-y: auto;
-        "
-      >
+      <div style="display: flex; flex-direction: column; gap: 14px; max-height: 60vh; padding: 8px 0; overflow-y: auto">
         <div>
-          <label>上级菜单</label>
-          <select
-            v-model="editForm.parent_id"
-            style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #d9d9d9;
-              border-radius: 4px;
-            "
-          >
-            <option v-for="p in parentOptions" :key="p.value" :value="p.value">
-              {{ p.label }}
-            </option>
-          </select>
+          <label style="display: block; margin-bottom: 4px">上级菜单</label>
+          <NSelect v-model:value="editForm.parent_id" :options="parentOptions" placeholder="选择上级菜单" />
         </div>
         <div>
-          <label>菜单名称 *</label>
-          <input
-            v-model="editForm.name"
-            style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #d9d9d9;
-              border-radius: 4px;
-            "
-            placeholder="如：用户管理"
-          />
+          <label style="display: block; margin-bottom: 4px">菜单名称 *</label>
+          <NInput v-model:value="editForm.name" placeholder="如：用户管理" />
         </div>
         <div>
-          <label>菜单类型</label>
-          <select
-            v-model="editForm.type"
-            style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #d9d9d9;
-              border-radius: 4px;
-            "
-          >
-            <option v-for="t in typeOptions" :key="t.value" :value="t.value">
-              {{ t.label }}
-            </option>
-          </select>
+          <label style="display: block; margin-bottom: 4px">菜单类型</label>
+          <NSelect v-model:value="editForm.type" :options="typeOptions" placeholder="选择类型" />
         </div>
         <div v-if="editForm.type !== 'button'">
-          <label>路由路径</label>
-          <input
-            v-model="editForm.path"
-            style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #d9d9d9;
-              border-radius: 4px;
-            "
-            placeholder="如：/system/user"
-          />
+          <label style="display: block; margin-bottom: 4px">路由路径</label>
+          <NInput v-model:value="editForm.path" placeholder="如：/system/user" />
         </div>
         <div v-if="editForm.type === 'menu'">
-          <label>组件路径</label>
-          <input
-            v-model="editForm.component"
-            style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #d9d9d9;
-              border-radius: 4px;
-            "
-            placeholder="如：/system/user/index"
-          />
+          <label style="display: block; margin-bottom: 4px">组件路径</label>
+          <NInput v-model:value="editForm.component" placeholder="如：/system/user/index" />
         </div>
         <div v-if="editForm.type !== 'button'">
-          <label>图标</label>
-          <input
-            v-model="editForm.icon"
-            style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #d9d9d9;
-              border-radius: 4px;
-            "
-            placeholder="如：icon-user"
-          />
+          <label style="display: block; margin-bottom: 4px">图标</label>
+          <NInput v-model:value="editForm.icon" placeholder="如：lucide:user" />
         </div>
         <div v-if="editForm.type === 'button'">
-          <label>权限码</label>
-          <input
-            v-model="editForm.permission_code"
-            style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #d9d9d9;
-              border-radius: 4px;
-            "
-            placeholder="如：system:user:add"
-          />
+          <label style="display: block; margin-bottom: 4px">权限码</label>
+          <NInput v-model:value="editForm.permission_code" placeholder="如：system:user:add" />
         </div>
         <div>
-          <label>排序</label>
-          <input
-            v-model.number="editForm.sort"
-            type="number"
-            style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #d9d9d9;
-              border-radius: 4px;
-            "
-          />
+          <label style="display: block; margin-bottom: 4px">排序</label>
+          <NInput v-model:value="editForm.sort" placeholder="0" />
         </div>
         <div>
-          <label>状态</label>
-          <select
-            v-model.number="editForm.status"
-            style="
-              width: 100%;
-              padding: 8px;
-              border: 1px solid #d9d9d9;
-              border-radius: 4px;
-            "
-          >
-            <option :value="1">启用</option>
-            <option :value="0">禁用</option>
-          </select>
+          <label style="display: block; margin-bottom: 4px">状态</label>
+          <NSelect v-model:value="editForm.status" :options="[{ label: '启用', value: 1 }, { label: '禁用', value: 0 }]" />
         </div>
       </div>
     </FormModal>
