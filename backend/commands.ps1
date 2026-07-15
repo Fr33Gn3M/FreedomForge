@@ -1,6 +1,9 @@
 # backend/commands.ps1
-# 用法: .\commands.ps1 <命令>
-# 效果类似前端 package.json 的 scripts
+# Usage: .\commands.ps1 <command>
+
+# Fix Chinese garbled text on Windows PowerShell
+chcp 65001 > $null
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 param(
     [Parameter(Position=0)]
@@ -10,15 +13,15 @@ param(
 switch ($Command) {
     "help" {
         Write-Host ""
-        Write-Host "  FreedomForge 后端命令面板" -ForegroundColor Cyan
-        Write-Host "  ==========================="
+        Write-Host "  FreedomForge Backend Commands" -ForegroundColor Cyan
+        Write-Host "  =============================="
         Write-Host ""
-        Write-Host "  .\commands.ps1 install    安装 Python 依赖"
-        Write-Host "  .\commands.ps1 run        启动服务 (生产模式)"
-        Write-Host "  .\commands.ps1 dev        启动服务 (开发模式，热重载)"
-        Write-Host "  .\commands.ps1 open       浏览器打开 API 文档"
-        Write-Host "  .\commands.ps1 db-reset   重置数据库"
-        Write-Host "  .\commands.ps1 clean      清理缓存文件"
+        Write-Host "  .\commands.ps1 install    Install Python deps"
+        Write-Host "  .\commands.ps1 run        Start server (production)"
+        Write-Host "  .\commands.ps1 dev        Start server (dev + hot reload)"
+        Write-Host "  .\commands.ps1 open       Open API docs in browser"
+        Write-Host "  .\commands.ps1 db-reset   Reset SQLite database"
+        Write-Host "  .\commands.ps1 clean      Clean __pycache__"
         Write-Host ""
     }
     "install" {
@@ -35,15 +38,15 @@ switch ($Command) {
     }
     "db-reset" {
         Remove-Item -Path "data/users.db" -ErrorAction SilentlyContinue
-        Write-Host "数据库已删除，重启服务后自动重建"
+        Write-Host "Database deleted. Restart server to recreate."
     }
     "clean" {
         Get-ChildItem -Recurse -Directory -Filter "__pycache__" | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
         Get-ChildItem -Recurse -File -Filter "*.pyc" | Remove-Item -Force -ErrorAction SilentlyContinue
-        Write-Host "缓存已清理"
+        Write-Host "Cache cleaned."
     }
     default {
-        Write-Host "未知命令: $Command" -ForegroundColor Red
-        Write-Host "输入 .\commands.ps1 查看可用命令"
+        Write-Host "Unknown command: $Command" -ForegroundColor Red
+        Write-Host "Run .\commands.ps1 to see available commands"
     }
 }
