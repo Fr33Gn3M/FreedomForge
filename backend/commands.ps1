@@ -1,14 +1,11 @@
 # backend/commands.ps1
 # Usage: .\commands.ps1 <command>
 
-param(
-    [Parameter(Position=0)]
-    [string]$Command = "help"
-)
-
 # Fix garbled text on Windows PowerShell
 chcp 65001 > $null
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+$Command = if ($args.Count -gt 0) { $args[0] } else { "help" }
 
 switch ($Command) {
     "help" {
