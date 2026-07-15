@@ -1,0 +1,43 @@
+# =============== 全局通用 ===============
+.DS_Store
+Thumbs.db
+# .vscode/                  # ❌ 不要提交 VS Code 配置（除非团队共享）
+*.log
+*.tmp
+*.swp
+.env                      # ⚠️ 敏感！包含数据库密码、密钥等
+
+# =============== 前端 (frontend) ===============
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.vite/
+/frontend/.pnpm-debug.log
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+
+# =============== 后端 (backend) ===============
+/backend/**/__pycache__/
+/backend/**/*.pyc
+/backend/.pytest_cache/
+/backend/.mypy_cache/
+/backend/.ruff_cache/
+/backend/venv/            # Python 虚拟环境
+/backend/env/             # 或你用的虚拟环境名
+/backend/.env             # ⚠️ FastAPI 的 SECRET_KEY 等敏感信息
+/backend/data/
+/frontend/data/
+/backend/instance/
+
+# =============== IDE / 编辑器 ===============
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# =============== 操作系统 ===============
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
