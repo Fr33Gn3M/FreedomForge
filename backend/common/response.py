@@ -4,7 +4,7 @@ from typing import Any
 from pydantic import BaseModel
 
 class ResponseModel(BaseModel):
-    code: int = 2000
+    code: int = 200
     message: str = "成功"
     data: Any = None  # 或叫 result，根据前端习惯
 
