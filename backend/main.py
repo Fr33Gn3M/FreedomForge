@@ -21,6 +21,16 @@ from database import (
     get_menus, get_menu, create_menu, update_menu, delete_menu,
     get_access_codes, get_user_menus,
 )
+from quant.models import (
+    SymbolInfo, KlineRequest,
+    StrategyInfo, StrategySaveRequest,
+    BacktestRequest, BacktestResult,
+    SignalData, SignalStartRequest,
+)
+from quant.market_data import MarketData
+from quant.strategy_loader import StrategyLoader
+from quant.backtest_engine import BacktestEngine
+from quant.signal_engine import SignalEngine
 
 # 初始化数据库
 init_db()
@@ -264,3 +274,106 @@ def menu_update(menu_id: int, req: MenuUpdate, current_user: dict = Depends(get_
 def menu_delete(menu_id: int, current_user: dict = Depends(get_current_user)):
     delete_menu(menu_id)
     return ResponseModel(code=200, message="删除成功", data=None)
+
+
+# ==================== 量化模块路由 ====================
+
+market_data = MarketData()
+strategy_loader = StrategyLoader()
+backtest_engine = BacktestEngine()
+signal_engine = SignalEngine()
+
+
+# ====== 行情数据 ======
+
+@app.get("/api/quant/market/symbols", summary="交易对列表")
+def quant_symbols(current_user: dict = Depends(get_current_user)):
+    symbols = market_data.get_symbols()
+    return ResponseModel(code=200, message="成功", data=symbols)
+
+
+@app.get("/api/quant/market/klines", summary="历史 K 线")
+def quant_klines(
+    symbol: str = Query("BTC-USDT-SWAP"),
+    timeframe: str = Query("1h"),
+    start: str = Query(None),
+    end: str = Query(None),
+    limit: int = Query(500),
+    current_user: dict = Depends(get_current_user),
+):
+    df = market_data.get_klines(symbol, timeframe, start, end, limit)
+    if df.empty:
+        return ResponseModel(code=200, message="暂无数据", data=[])
+    # 重置索引使 timestamp 成为列
+    df_reset = df.reset_index()
+    df_reset["timestamp"] = df_reset["timestamp"].astype(str)
+    return ResponseModel(code=200, message="成功", data=df_reset.to_dict(orient="records"))
+
+
+# ====== 策略管理 ======
+
+@app.get("/api/quant/strategy/list", summary="策略列表")
+def quant_strategy_list(current_user: dict = Depends(get_current_user)):
+    strategies = strategy_loader.list_strategies()
+    return ResponseModel(code=200, message="成功", data=strategies)
+
+
+@app.get("/api/quant/strategy/{name}", summary="获取策略内容")
+def quant_strategy_get(name: str, current_user: dict = Depends(get_current_user)):
+    content = strategy_loader.get_strategy_content(name)
+    if not content:
+        raise HTTPException(status_code=404, detail="策略不存在")
+    return ResponseModel(code=200, message="成功", data={"name": name, "content": content})
+
+
+@app.put("/api/quant/strategy/{name}", summary="保存策略")
+def quant_strategy_save(name: str, req: StrategySaveRequest,
+                        current_user: dict = Depends(get_current_user)):
+    strategy_loader.save_strategy(name, req.content)
+    return ResponseModel(code=200, message="保存成功", data=None)
+
+
+# ====== 回测 ======
+
+@app.post("/api/quant/backtest/run", summary="执行回测")
+def quant_backtest_run(req: BacktestRequest,
+                       current_user: dict = Depends(get_current_user)):
+    # 从本地数据库加载 K 线
+    klines = market_data.get_klines(req.symbol, req.timeframe, req.start_date, req.end_date)
+    if klines.empty:
+        raise HTTPException(status_code=400, detail="指定时间范围内无 K 线数据")
+
+    bt_id = backtest_engine.run(
+        strategy_name=req.strategy,
+        params=req.params,
+        klines=klines,
+        initial_cash=req.initial_cash,
+        commission=req.commission,
+    )
+    return ResponseModel(code=200, message="回测已启动", data={"id": bt_id})
+
+
+@app.get("/api/quant/backtest/{bt_id}", summary="获取回测结果")
+def quant_backtest_result(bt_id: str, current_user: dict = Depends(get_current_user)):
+    result = backtest_engine.get_result(bt_id)
+    if not result:
+        raise HTTPException(status_code=404, detail="回测结果不存在")
+    return ResponseModel(code=200, message="成功", data=result)
+
+
+# ====== 信号 ======
+
+@app.post("/api/quant/signal/start", summary="启动信号监控")
+async def quant_signal_start(req: SignalStartRequest,
+                             current_user: dict = Depends(get_current_user)):
+    await signal_engine.start(req.strategy, req.symbol, req.timeframe, **req.params)
+    return ResponseModel(code=200, message="信号监控已启动", data=None)
+
+
+@app.get("/api/quant/signal/log", summary="信号历史")
+def quant_signal_log(
+    page: int = Query(1),
+    page_size: int = Query(20),
+    current_user: dict = Depends(get_current_user),
+):
+    return ResponseModel(code=200, message="成功", data=signal_engine.get_log(page, page_size))
