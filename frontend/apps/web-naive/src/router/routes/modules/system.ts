@@ -6,7 +6,7 @@ const routes: RouteRecordRaw[] = [
     path: '/system',
     meta: {
       title: '系统管理',
-      icon: 'icon-settings',
+      icon: 'lucide:settings',
       authority: ['super', 'admin'],
     },
     children: [

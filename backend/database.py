@@ -130,11 +130,11 @@ def _seed_menus(cursor):
 
     menus = [
         # 仪表盘
-        (0, "仪表盘", "/dashboard", "", "icon-dashboard", "dir", "", 1),
+        (0, "仪表盘", "/dashboard", "", "lucide:layout-dashboard", "dir", "", 1),
         (1, "工作台", "/dashboard/workspace", "/dashboard/workspace/index", "", "menu", "", 1),
         (1, "分析页", "/dashboard/analytics", "/dashboard/analytics/index", "", "menu", "", 2),
         # 系统管理
-        (0, "系统管理", "/system", "", "icon-settings", "dir", "", 2),
+        (0, "系统管理", "/system", "", "lucide:settings", "dir", "", 2),
         (4, "用户管理", "/system/user", "/system/user/index", "", "menu", "system:user:view", 1),
         (4, "角色管理", "/system/role", "/system/role/index", "", "menu", "system:role:view", 2),
         (4, "菜单管理", "/system/menu", "/system/menu/index", "", "menu", "system:menu:view", 3),
