@@ -1,7 +1,4 @@
-import {
-  appCopyrightPreferences,
-  defineOverridesPreferences,
-} from '@vben/preferences';
+import { defineOverridesPreferences } from '@vben/preferences';
 
 /**
  * @description 项目配置文件
@@ -13,5 +10,9 @@ export const overridesPreferences = defineOverridesPreferences({
   app: {
     name: import.meta.env.VITE_APP_TITLE,
   },
-  copyright: appCopyrightPreferences,
+  copyright: {
+    enable: false,
+    companyName: 'FreedomForge',
+    date: '2025',
+  },
 });
