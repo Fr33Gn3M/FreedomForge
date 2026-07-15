@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { ref } from 'vue';
 
@@ -42,7 +41,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
     proxyConfig: {
       ajax: {
-        query: async ({ page }) => {
+        query: async ({ page }: { page: { currentPage: number; pageSize: number } }) => {
           const res = await getUserListApi({
             page: page.currentPage,
             page_size: page.pageSize,
@@ -59,7 +58,7 @@ const editForm = ref({
   id: 0,
   nickname: '',
   email: '',
-  role_id: null as number | null,
+  role_id: null as null | number,
 });
 const roleOptions = ref<{ label: string; value: number }[]>([]);
 

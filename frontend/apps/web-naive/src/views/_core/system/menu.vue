@@ -1,12 +1,10 @@
 <script lang="ts" setup>
-import type { MenuItem } from '#/api/core/system';
-import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { ref } from 'vue';
 
 import { Page, useVbenModal } from '@vben/common-ui';
 
-import { NButton, NSelect, NSpace, NTag } from 'naive-ui';
+import { NButton, NSpace, NTag } from 'naive-ui';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
@@ -162,9 +160,7 @@ async function handleDelete(row: Record<string, any>) {
     <Grid>
       <template #toolbar-actions>
         <NSpace>
-          <NButton type="primary" size="small" @click="openAdd(0)"
-            >新增菜单</NButton
-          >
+          <NButton type="primary" size="small" @click="openAdd(0)">新增菜单</NButton>
           <NButton size="small" @click="gridApi?.reload()">刷新</NButton>
         </NSpace>
       </template>
