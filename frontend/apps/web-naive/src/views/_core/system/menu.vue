@@ -5,7 +5,7 @@ import type { VxeGridProps } from '#/adapter/vxe-table';
 import { ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
-import { useVbenModal } from '@vben/popup';
+import { useVbenModal } from '@vben-core/popup-ui';
 
 import { NButton, NSelect, NSpace, NTag } from 'naive-ui';
 
