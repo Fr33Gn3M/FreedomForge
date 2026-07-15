@@ -244,7 +244,7 @@ async function handleDelete(row: Record<string, any>) {
         </div>
         <div>
           <label style="display: block; margin-bottom: 4px">排序</label>
-          <NInput v-model:value="editForm.sort" placeholder="0" />
+          <NInput :value="String(editForm.sort)" @update:value="(v) => editForm.sort = Number(v) || 0" placeholder="0" />
         </div>
         <div>
           <label style="display: block; margin-bottom: 4px">状态</label>
