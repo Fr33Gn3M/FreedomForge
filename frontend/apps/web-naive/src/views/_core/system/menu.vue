@@ -5,6 +5,7 @@ import type { VxeGridProps } from '#/adapter/vxe-table';
 import { ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
+
 import { useVbenModal } from '@vben-core/popup-ui';
 
 import { NButton, NSelect, NSpace, NTag } from 'naive-ui';
@@ -123,19 +124,23 @@ const [FormModal, formModalApi] = useVbenModal({
       } else {
         isEdit.value = false;
         editForm.value = {
-          id: 0, parent_id: 0, name: '', path: '', component: '', icon: '',
-          type: 'menu', permission_code: '', sort: 0, status: 1,
+          id: 0,
+          parent_id: 0,
+          name: '',
+          path: '',
+          component: '',
+          icon: '',
+          type: 'menu',
+          permission_code: '',
+          sort: 0,
+          status: 1,
         };
       }
     }
   },
   onConfirm: async () => {
     const data = { ...editForm.value };
-    if (isEdit.value) {
-      await updateMenuApi(data.id, data);
-    } else {
-      await createMenuApi(data);
-    }
+    await (isEdit.value ? updateMenuApi(data.id, data) : createMenuApi(data));
     gridApi?.reload();
     formModalApi.close();
   },
@@ -159,13 +164,24 @@ async function handleDelete(row: Record<string, any>) {
     <Grid>
       <template #toolbar-actions>
         <NSpace>
-          <NButton type="primary" size="small" @click="openAdd(0)">新增菜单</NButton>
+          <NButton type="primary" size="small" @click="openAdd(0)"
+            >新增菜单</NButton
+          >
           <NButton size="small" @click="gridApi?.reload()">刷新</NButton>
         </NSpace>
       </template>
 
       <template #type="{ row }">
-        <NTag :type="row.type === 'dir' ? 'info' : row.type === 'menu' ? 'success' : 'default'" size="small">
+        <NTag
+          :type="
+            row.type === 'dir'
+              ? 'info'
+              : row.type === 'menu'
+                ? 'success'
+                : 'default'
+          "
+          size="small"
+        >
           {{ typeLabels[row.type] || row.type }}
         </NTag>
       </template>
@@ -178,13 +194,23 @@ async function handleDelete(row: Record<string, any>) {
 
       <template #action="{ row }">
         <NSpace>
-          <NButton v-if="row.type !== 'button'" size="tiny" quaternary @click="openAdd(row.id)">
+          <NButton
+            v-if="row.type !== 'button'"
+            size="tiny"
+            quaternary
+            @click="openAdd(row.id)"
+          >
             新增子项
           </NButton>
           <NButton size="tiny" type="primary" quaternary @click="openEdit(row)">
             编辑
           </NButton>
-          <NButton size="tiny" type="error" quaternary @click="handleDelete(row)">
+          <NButton
+            size="tiny"
+            type="error"
+            quaternary
+            @click="handleDelete(row)"
+          >
             删除
           </NButton>
         </NSpace>
@@ -193,46 +219,137 @@ async function handleDelete(row: Record<string, any>) {
 
     <!-- Form Modal -->
     <FormModal>
-      <div style="display:flex;flex-direction:column;gap:14px;padding:8px 0;max-height:60vh;overflow-y:auto">
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+          max-height: 60vh;
+          padding: 8px 0;
+          overflow-y: auto;
+        "
+      >
         <div>
           <label>上级菜单</label>
-          <select v-model="editForm.parent_id" style="width:100%;padding:8px;border:1px solid #d9d9d9;border-radius:4px">
-            <option v-for="p in parentOptions" :key="p.value" :value="p.value">{{ p.label }}</option>
+          <select
+            v-model="editForm.parent_id"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            "
+          >
+            <option v-for="p in parentOptions" :key="p.value" :value="p.value">
+              {{ p.label }}
+            </option>
           </select>
         </div>
         <div>
           <label>菜单名称 *</label>
-          <input v-model="editForm.name" style="width:100%;padding:8px;border:1px solid #d9d9d9;border-radius:4px" placeholder="如：用户管理" />
+          <input
+            v-model="editForm.name"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            "
+            placeholder="如：用户管理"
+          />
         </div>
         <div>
           <label>菜单类型</label>
-          <select v-model="editForm.type" style="width:100%;padding:8px;border:1px solid #d9d9d9;border-radius:4px">
-            <option v-for="t in typeOptions" :key="t.value" :value="t.value">{{ t.label }}</option>
+          <select
+            v-model="editForm.type"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            "
+          >
+            <option v-for="t in typeOptions" :key="t.value" :value="t.value">
+              {{ t.label }}
+            </option>
           </select>
         </div>
         <div v-if="editForm.type !== 'button'">
           <label>路由路径</label>
-          <input v-model="editForm.path" style="width:100%;padding:8px;border:1px solid #d9d9d9;border-radius:4px" placeholder="如：/system/user" />
+          <input
+            v-model="editForm.path"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            "
+            placeholder="如：/system/user"
+          />
         </div>
         <div v-if="editForm.type === 'menu'">
           <label>组件路径</label>
-          <input v-model="editForm.component" style="width:100%;padding:8px;border:1px solid #d9d9d9;border-radius:4px" placeholder="如：/system/user/index" />
+          <input
+            v-model="editForm.component"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            "
+            placeholder="如：/system/user/index"
+          />
         </div>
         <div v-if="editForm.type !== 'button'">
           <label>图标</label>
-          <input v-model="editForm.icon" style="width:100%;padding:8px;border:1px solid #d9d9d9;border-radius:4px" placeholder="如：icon-user" />
+          <input
+            v-model="editForm.icon"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            "
+            placeholder="如：icon-user"
+          />
         </div>
         <div v-if="editForm.type === 'button'">
           <label>权限码</label>
-          <input v-model="editForm.permission_code" style="width:100%;padding:8px;border:1px solid #d9d9d9;border-radius:4px" placeholder="如：system:user:add" />
+          <input
+            v-model="editForm.permission_code"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            "
+            placeholder="如：system:user:add"
+          />
         </div>
         <div>
           <label>排序</label>
-          <input v-model.number="editForm.sort" type="number" style="width:100%;padding:8px;border:1px solid #d9d9d9;border-radius:4px" />
+          <input
+            v-model.number="editForm.sort"
+            type="number"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            "
+          />
         </div>
         <div>
           <label>状态</label>
-          <select v-model.number="editForm.status" style="width:100%;padding:8px;border:1px solid #d9d9d9;border-radius:4px">
+          <select
+            v-model.number="editForm.status"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            "
+          >
             <option :value="1">启用</option>
             <option :value="0">禁用</option>
           </select>

@@ -53,7 +53,9 @@ const formSchema = computed((): VbenFormSchema[] => {
           strengthText: () => $t('authentication.passwordStrength'),
         };
       },
-      rules: z.string().min(6, { message: $t('authentication.passwordMinLength') }),
+      rules: z
+        .string()
+        .min(6, { message: $t('authentication.passwordMinLength') }),
     },
     {
       component: 'VbenInputPassword',

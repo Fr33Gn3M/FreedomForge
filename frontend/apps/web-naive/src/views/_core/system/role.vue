@@ -4,6 +4,7 @@ import type { VxeGridProps } from '#/adapter/vxe-table';
 import { ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
+
 import { useVbenModal } from '@vben-core/popup-ui';
 
 import { NButton, NCheckbox, NSpace, NTag, NTree } from 'naive-ui';
@@ -17,8 +18,8 @@ import {
   getRoleMenuIdsApi,
   setRoleMenusApi,
   updateRoleApi,
-  type MenuItem,
 } from '#/api/core/system';
+import type { MenuItem } from '#/api/core/system';
 
 // ====== Grid ======
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -65,7 +66,12 @@ const [FormModal, formModalApi] = useVbenModal({
       const row = formModalApi.getData<Record<string, any>>();
       if (row?.id) {
         isEdit.value = true;
-        editForm.value = { id: row.id, name: row.name, code: row.code, description: row.description || '' };
+        editForm.value = {
+          id: row.id,
+          name: row.name,
+          code: row.code,
+          description: row.description || '',
+        };
       } else {
         isEdit.value = false;
         editForm.value = { id: 0, name: '', code: '', description: '' };
@@ -73,18 +79,16 @@ const [FormModal, formModalApi] = useVbenModal({
     }
   },
   onConfirm: async () => {
-    if (isEdit.value) {
-      await updateRoleApi(editForm.value.id, {
-        name: editForm.value.name,
-        description: editForm.value.description,
-      });
-    } else {
-      await createRoleApi({
-        name: editForm.value.name,
-        code: editForm.value.code,
-        description: editForm.value.description,
-      });
-    }
+    await (isEdit.value
+      ? updateRoleApi(editForm.value.id, {
+          name: editForm.value.name,
+          description: editForm.value.description,
+        })
+      : createRoleApi({
+          name: editForm.value.name,
+          code: editForm.value.code,
+          description: editForm.value.description,
+        }));
     gridApi?.reload();
     formModalApi.close();
   },
@@ -151,7 +155,9 @@ function buildTree(menus: MenuItem[], parentId = 0): any[] {
     <Grid>
       <template #toolbar-actions>
         <NSpace>
-          <NButton type="primary" size="small" @click="openAdd">新增角色</NButton>
+          <NButton type="primary" size="small" @click="openAdd"
+            >新增角色</NButton
+          >
           <NButton size="small" @click="gridApi?.reload()">刷新</NButton>
         </NSpace>
       </template>
@@ -164,11 +170,17 @@ function buildTree(menus: MenuItem[], parentId = 0): any[] {
 
       <template #action="{ row }">
         <NSpace>
-          <NButton size="tiny" type="primary" quaternary @click="openPerm(row)">权限</NButton>
+          <NButton size="tiny" type="primary" quaternary @click="openPerm(row)"
+            >权限</NButton
+          >
           <NButton size="tiny" quaternary @click="openEdit(row)">编辑</NButton>
-          <NButton size="tiny" type="error" quaternary
+          <NButton
+            size="tiny"
+            type="error"
+            quaternary
             :disabled="row.code === 'super'"
-            @click="handleDelete(row)">
+            @click="handleDelete(row)"
+          >
             删除
           </NButton>
         </NSpace>
@@ -177,26 +189,55 @@ function buildTree(menus: MenuItem[], parentId = 0): any[] {
 
     <!-- Add/Edit Modal -->
     <FormModal>
-      <div style="display:flex;flex-direction:column;gap:16px;padding:8px 0">
+      <div
+        style="display: flex; flex-direction: column; gap: 16px; padding: 8px 0"
+      >
         <div>
           <label>角色名称</label>
-          <input v-model="editForm.name" style="width:100%;padding:8px;border:1px solid #d9d9d9;border-radius:4px" placeholder="如：财务主管" />
+          <input
+            v-model="editForm.name"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            "
+            placeholder="如：财务主管"
+          />
         </div>
         <div>
           <label>角色编码</label>
-          <input v-model="editForm.code" :disabled="isEdit" style="width:100%;padding:8px;border:1px solid #d9d9d9;border-radius:4px" placeholder="如：finance_admin" />
+          <input
+            v-model="editForm.code"
+            :disabled="isEdit"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            "
+            placeholder="如：finance_admin"
+          />
         </div>
         <div>
           <label>描述</label>
-          <input v-model="editForm.description" style="width:100%;padding:8px;border:1px solid #d9d9d9;border-radius:4px" />
+          <input
+            v-model="editForm.description"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            "
+          />
         </div>
       </div>
     </FormModal>
 
     <!-- Permission Modal -->
     <PermModal>
-      <div style="padding:8px 0">
-        <p style="margin-bottom:12px;font-weight:600">
+      <div style="padding: 8px 0">
+        <p style="margin-bottom: 12px; font-weight: 600">
           为「{{ permRoleName }}」分配菜单权限：
         </p>
         <NTree
@@ -206,7 +247,7 @@ function buildTree(menus: MenuItem[], parentId = 0): any[] {
           cascade
           block-node
           default-expand-all
-          @update:checked-keys="(keys: number[]) => checkedMenuIds = keys"
+          @update:checked-keys="(keys: number[]) => (checkedMenuIds = keys)"
         />
       </div>
     </PermModal>

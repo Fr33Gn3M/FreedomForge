@@ -18,11 +18,18 @@ export interface UserListResult {
   list: UserItem[];
 }
 
-export async function getUserListApi(params: { page: number; page_size: number; keyword?: string }) {
+export async function getUserListApi(params: {
+  page: number;
+  page_size: number;
+  keyword?: string;
+}) {
   return requestClient.get<UserListResult>('/system/user/list', { params });
 }
 
-export async function updateUserApi(userId: number, data: { email?: string; nickname?: string; role_id?: number | null }) {
+export async function updateUserApi(
+  userId: number,
+  data: { email?: string; nickname?: string; role_id?: number | null },
+) {
   return requestClient.put(`/system/user/${userId}`, data);
 }
 
@@ -54,7 +61,11 @@ export async function getAllRolesApi() {
   return requestClient.get<RoleItem[]>('/system/role/all');
 }
 
-export async function createRoleApi(data: { name: string; code: string; description?: string }) {
+export async function createRoleApi(data: {
+  name: string;
+  code: string;
+  description?: string;
+}) {
   return requestClient.post('/system/role', data);
 }
 
@@ -71,7 +82,9 @@ export async function getRoleMenuIdsApi(roleId: number) {
 }
 
 export async function setRoleMenusApi(roleId: number, menuIds: number[]) {
-  return requestClient.put(`/system/role/${roleId}/menus`, { menu_ids: menuIds });
+  return requestClient.put(`/system/role/${roleId}/menus`, {
+    menu_ids: menuIds,
+  });
 }
 
 // ==================== 菜单管理 ====================
@@ -83,7 +96,7 @@ export interface MenuItem {
   path: string;
   component: string;
   icon: string;
-  type: string;          // dir | menu | button
+  type: string; // dir | menu | button
   permission_code: string;
   sort: number;
   status: number;

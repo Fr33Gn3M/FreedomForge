@@ -74,9 +74,7 @@ export async function logoutApi() {
  */
 export async function getAccessCodesApi() {
   try {
-    const result = await requestClient.get<{ codes: string[] }>(
-      '/auth/codes',
-    );
+    const result = await requestClient.get<{ codes: string[] }>('/auth/codes');
     return result?.codes ?? [];
   } catch {
     return [] as string[];

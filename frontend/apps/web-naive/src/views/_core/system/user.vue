@@ -4,6 +4,7 @@ import type { VxeGridProps } from '#/adapter/vxe-table';
 import { ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
+
 import { useVbenModal } from '@vben-core/popup-ui';
 
 import { NButton, NSpace, NTag } from 'naive-ui';
@@ -56,7 +57,12 @@ const [Grid, gridApi] = useVbenVxeGrid({
 });
 
 // ====== Edit modal ======
-const editForm = ref({ id: 0, nickname: '', email: '', role_id: null as number | null });
+const editForm = ref({
+  id: 0,
+  nickname: '',
+  email: '',
+  role_id: null as number | null,
+});
 const roleOptions = ref<{ label: string; value: number }[]>([]);
 
 const [Modal, modalApi] = useVbenModal({
@@ -71,7 +77,10 @@ const [Modal, modalApi] = useVbenModal({
         role_id: row.role_id || null,
       };
       const roles = await getAllRolesApi();
-      roleOptions.value = roles.map((r: any) => ({ label: r.name, value: r.id }));
+      roleOptions.value = roles.map((r: any) => ({
+        label: r.name,
+        value: r.id,
+      }));
     }
   },
   onConfirm: async () => {
@@ -108,7 +117,16 @@ async function handleDelete(row: Record<string, any>) {
       </template>
 
       <template #role_name="{ row }">
-        <NTag :type="row.role_code === 'super' ? 'error' : row.role_code === 'admin' ? 'warning' : 'info'" size="small">
+        <NTag
+          :type="
+            row.role_code === 'super'
+              ? 'error'
+              : row.role_code === 'admin'
+                ? 'warning'
+                : 'info'
+          "
+          size="small"
+        >
           {{ row.role_name }}
         </NTag>
       </template>
@@ -118,9 +136,13 @@ async function handleDelete(row: Record<string, any>) {
           <NButton size="tiny" type="primary" quaternary @click="openEdit(row)">
             编辑
           </NButton>
-          <NButton size="tiny" type="error" quaternary
+          <NButton
+            size="tiny"
+            type="error"
+            quaternary
             :disabled="row.role_code === 'super'"
-            @click="handleDelete(row)">
+            @click="handleDelete(row)"
+          >
             删除
           </NButton>
         </NSpace>
@@ -128,20 +150,48 @@ async function handleDelete(row: Record<string, any>) {
     </Grid>
 
     <Modal>
-      <div style="display:flex;flex-direction:column;gap:16px;padding:8px 0">
+      <div
+        style="display: flex; flex-direction: column; gap: 16px; padding: 8px 0"
+      >
         <div>
           <label>昵称</label>
-          <input v-model="editForm.nickname" style="width:100%;padding:8px;border:1px solid #d9d9d9;border-radius:4px" />
+          <input
+            v-model="editForm.nickname"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            "
+          />
         </div>
         <div>
           <label>邮箱</label>
-          <input v-model="editForm.email" style="width:100%;padding:8px;border:1px solid #d9d9d9;border-radius:4px" />
+          <input
+            v-model="editForm.email"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            "
+          />
         </div>
         <div>
           <label>角色</label>
-          <select v-model="editForm.role_id" style="width:100%;padding:8px;border:1px solid #d9d9d9;border-radius:4px">
+          <select
+            v-model="editForm.role_id"
+            style="
+              width: 100%;
+              padding: 8px;
+              border: 1px solid #d9d9d9;
+              border-radius: 4px;
+            "
+          >
             <option :value="null">-- 无角色 --</option>
-            <option v-for="r in roleOptions" :key="r.value" :value="r.value">{{ r.label }}</option>
+            <option v-for="r in roleOptions" :key="r.value" :value="r.value">
+              {{ r.label }}
+            </option>
           </select>
         </div>
       </div>
