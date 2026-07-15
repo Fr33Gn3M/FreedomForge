@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import type { VxeGridProps } from '#/adapter/vxe-table';
+
+import type { MenuItem } from '#/api/core/system';
 
 import { ref } from 'vue';
 
 import { Page, useVbenModal } from '@vben/common-ui';
 
-import { NButton, NCheckbox, NSpace, NTag, NTree } from 'naive-ui';
+import { NButton, NSpace, NTag, NTree } from 'naive-ui';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
@@ -17,7 +18,6 @@ import {
   setRoleMenusApi,
   updateRoleApi,
 } from '#/api/core/system';
-import type { MenuItem } from '#/api/core/system';
 
 // ====== Grid ======
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -153,9 +153,9 @@ function buildTree(menus: MenuItem[], parentId = 0): any[] {
     <Grid>
       <template #toolbar-actions>
         <NSpace>
-          <NButton type="primary" size="small" @click="openAdd"
-            >新增角色</NButton
-          >
+          <NButton type="primary" size="small" @click="openAdd">
+新增角色
+</NButton>
           <NButton size="small" @click="gridApi?.reload()">刷新</NButton>
         </NSpace>
       </template>
@@ -168,9 +168,9 @@ function buildTree(menus: MenuItem[], parentId = 0): any[] {
 
       <template #action="{ row }">
         <NSpace>
-          <NButton size="tiny" type="primary" quaternary @click="openPerm(row)"
-            >权限</NButton
-          >
+          <NButton size="tiny" type="primary" quaternary @click="openPerm(row)">
+权限
+</NButton>
           <NButton size="tiny" quaternary @click="openEdit(row)">编辑</NButton>
           <NButton
             size="tiny"
