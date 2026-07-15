@@ -1,14 +1,14 @@
 # backend/commands.ps1
 # Usage: .\commands.ps1 <command>
 
-# Fix Chinese garbled text on Windows PowerShell
-chcp 65001 > $null
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-
 param(
     [Parameter(Position=0)]
     [string]$Command = "help"
 )
+
+# Fix garbled text on Windows PowerShell
+chcp 65001 > $null
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 switch ($Command) {
     "help" {
