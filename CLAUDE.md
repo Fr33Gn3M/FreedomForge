@@ -102,6 +102,7 @@ When adding new API endpoints:
 - Path alias `#/` maps to `apps/web-naive/src/`
 - Env vars prefixed with `VITE_` in `.env.development` (port 5888, API base `/api`)
 - The Nitro mock server (`VITE_NITRO_MOCK`) is **disabled** — all API calls go to the real Python backend
+- **UI components MUST use Naive UI library** (already installed and configured). Never use raw HTML `<input>`, `<select>`, or `<textarea>` elements — always use `NInput`, `NSelect`, `NButton`, `NTag`, `NTree`, `NSpace`, `NDataTable`, `NModal`, etc. from `naive-ui`. The project has dark theme enabled, and raw HTML elements will render white/unstyled
 
 ### Database Notes
 
